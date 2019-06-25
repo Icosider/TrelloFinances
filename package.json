@@ -1,0 +1,13 @@
+{
+    "name": "price-power-up",
+    "version": "1.0",
+    "description": "The Power-Up for Trello that shows price and goal for member(-s), if the cards are pay.",
+    "repository": "git@github.com:Ivasik78/TrelloPrice.git",
+    "author": "Ivasik",
+    "license": "MIT",
+    "connectors": {
+        "iframe": {
+            "url": "index.html"
+        }
+    }
+}

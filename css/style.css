@@ -1,0 +1,16 @@
+.price-select-currency {
+    background: #edeff0;
+    border-radius: 3px;
+    border: 1px solid #798d99;
+    box-sizing: border-box;
+    display: block;
+    margin-bottom: 1em;
+    padding: .5em;
+    width: 100%;
+    max-width: 500px;
+}
+
+.price-confirm-btns .price-remove {
+    float: right;
+    margin-right: 0;
+}

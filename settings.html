@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <form id="priceSettings">
+        <label data-i18n-id="price" for="priceSettings">Price</label>
+        <input type="text" id="price" placeholder="0">
+        <label data-i18n-id="currency" for="priceSettings">Currency</label>
+        <select class="price-select-currency" id="currency">
+            <option data-i18n-id="currency_select">Select currency</option>
+        </select>
+
+        <div class="price-confirm-btns">
+            <button data-i18n-id="save" type="submit" class="mod-primary" id="save">Save</button>
+            <button data-i18n-id="remove" type="submit" class="mod-danger price-remove" id="remove">Remove</button>
+        </div>
+    </form>
+
+    <script src="//p.trellocdn.com/power-up.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>
