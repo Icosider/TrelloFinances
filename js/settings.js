@@ -1,21 +1,21 @@
-const promise = TrelloPowerUp.Promise;
-const t = TrelloPowerUp.iframe({
+const promise = TrelloPowerUp.Promise,
+t = TrelloPowerUp.iframe({
     localization: {
         defaultLocale: 'en',
         supportedLocales: ['en', 'fr', 'ru'],
         resourceUrl: 'lang/{locale}.json'
     }
-});
-const currency = {
+}),
+currency = {
     AFN: '؋', USD: '$', THB: '฿', KRW: '₩',
     UAH: '₴', PYG: '₲', ANG: 'ƒ', VND: '₫',
     EUR: '€', JPY: '¥', LAK: '₭', CRC: '₡',
     TRY: '₺', AZN: '₼', NGN: '₦', PHP: '₱',
     RUB: '₽', INR: '₹', IDR: '₨', BDT: '৳',
     KZT: '₸', FKP: '£', ILS: '₪', CNY: '¥'
-}
+};
 
-t.render(function() {
+t.render(() => {
     t.localizeNode(document.body);
 
     promise.all([
@@ -35,15 +35,14 @@ t.render(function() {
 
             if (cardCur === cur || window.locale === 'ru' && cur.toString() === 'RUB')
                 currencyElement.selected = true;
-
             currencySelector.appendChild(currencyElement);
         }
     });
 });
 
-document.getElementById('save').addEventListener('click', function(e) {
+document.getElementById('save').addEventListener('click', (e) => {
     const price = document.getElementById('price').value;
-    var cur = document.getElementById('currency').value;
+    const cur = document.getElementById('currency').value;
 
     if (isNaN(parseInt(price))) {
         return t.popup({
@@ -51,20 +50,13 @@ document.getElementById('save').addEventListener('click', function(e) {
             url: 'error.html'
         });
     }
-
-    return t.set('card', 'shared', 'price', Math.abs(price)).then(function() {
-        return t.set('card', 'shared', 'currency', cur.toString());
-    }).then(function() {
-        return t.closePopup();
-    });
+    return t.set('card', 'shared', 'price', Math.abs(price)).then(() => 
+            t.set('card', 'shared', 'currency', cur.toString()).then(() => 
+            t.closePopup()));
 });
 
-document.getElementById('remove').addEventListener('click', function(e) {
-    return t.get('card', 'shared', 'price').then(function(price) {
-        if (!isNaN(parseInt(price)))
-            return t.remove('card', 'shared', 'price').then(function() {
-                t.closePopup();
-            });
-        return null;
-    });
-});
+document.getElementById('remove').addEventListener('click', (e) => t.get('card', 'shared', 'price').then((price) => {
+    if (!isNaN(parseInt(price)))
+        return t.remove('card', 'shared', 'price').then(() => t.closePopup());
+    return null;
+}));

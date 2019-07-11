@@ -1,102 +1,98 @@
-const promise = TrelloPowerUp.Promise;
+const PROMISE = TrelloPowerUp.Promise;
+const ICON_PRICE = 'https://image.flaticon.com/icons/svg/287/287616.svg';
 
-const cur = {
-    AFN: '؋', USD: '$', THB: '฿', KRW: '₩',
-    UAH: '₴', PYG: '₲', ANG: 'ƒ', VND: '₫',
-    EUR: '€', JPY: '¥', LAK: '₭', CRC: '₡',
-    TRY: '₺', AZN: '₼', NGN: '₦', PHP: '₱',
-    RUB: '₽', INR: '₹', IDR: '₨', BDT: '৳',
-    KZT: '₸', FKP: '£', ILS: '₪', CNY: '¥'
-}
+function cardButtons(t) {
+    const priceName = t.localizeKey('set_price');
+    return {
+        icon: ICON_PRICE,
+        text: priceName,
+        callback: (t) => t.popup({
+            title: priceName,
+            url: './settings.html',
+            height: 192
+        })
+    };
+};
 
-function getBadge(t) {
-    return promise.all([
+function cardBadge(t) {
+    return PROMISE.all([
         t.get('card', 'shared', 'price'),
         t.get('card', 'shared', 'paid', false),
         t.get('card', 'shared', 'currency')
-    ]).spread(function(price, paid, currency) {
-        if (price === null || price == 0)
+    ]).spread((price, paid, currency) => {
+        if (isNaN(price) || price == 0)
             return null;
         return {
             title: t.localizeKey('price'),
-            text: paid ? t.localizeKey('paid') : price + ' ' + cur[currency],
+            text: paid ? t.localizeKey('paid') : price.toLocaleString(window.locale, { style: 'currency', currency: currency }),
             color: paid ? 'green' : 'red',
-            callback: function(t) {
-                return t.set('card', 'shared', 'paid', !paid);
-            }
-        }
+            callback: (t) => t.set('card', 'shared', 'paid', !paid)
+        };
     })
-}
+};
+
+function manager(t) {
+    const managerName = t.localizeKey('manager');
+    return {
+        text: managerName,
+        icon: ICON_PRICE,
+        callback: (t) => t.modal({
+            title: managerName,
+            url: './manager.html',
+            accentColor: '#F2D600',
+            fullscreen: true,
+            callback: () => console.log('Goodbye.'),
+        })
+    };
+};
+
+function sorters(t) {
+    return [{
+        text: t.localizeKey('sortIncrease'),
+        callback: (t, options) => sortCards(t, options, false)
+    }, {
+        text: t.localizeKey('sortDecrease'),
+        callback: (t, options) => sortCards(t, options, true)
+    }];
+};
 
 function sortCards(t, options, reverse) {
-    return new Promise(function(resolve) {
+    return new Promise((resolve) => {
         let values = {};
 
-        options.cards.forEach(function(card) {
-            t.get(card.id, 'shared', 'price').then(function(price) {
-                values[card.id] = price;
-                resolve(values);
-            });
-        });
-    }).then(function(values) {
-        const sortedCards = options.cards.sort(function(a, b) {
-            const mA = parseInt(values[a.id]);
-            const mB = parseInt(values[b.id]);
+        options.cards.forEach((card) => t.get(card.id, 'shared', 'price').then((price) => {
+            values[card.id] = price;
+            resolve(values);
+        }));
+    }).then((values) => {
+        const sortedCards = options.cards.sort((a, b) => {
+            const priceA = parseInt(values[a.id]);
+            const priceB = parseInt(values[b.id]);
 
-            if (mA > mB)
+            if (priceA > priceB)
                 return 1;
-            else if (mB > mA)
+            else if (priceB > priceA)
                 return -1;
             return 0;
         });
 
-        let sortedId = sortedCards.map(function(c) { return c.id; });
+        let sortedCardsId = sortedCards.map((c) => c.id);
 
         if (reverse)
-            sortedId = sortedId.reverse();
-        return {
-            sortedIds: sortedId
-        };
+            sortedCardsId = sortedCardsId.reverse();
+        return { sortedIds: sortedCardsId };
     });
-}
+};
 
 /**
  *   Initialization of capabilities
  */
 TrelloPowerUp.initialize({
-        'card-buttons': function(t) {
-            const priceName = t.localizeKey('set_price');
-            return {
-                icon: 'https://image.flaticon.com/icons/svg/287/287616.svg',
-                text: priceName,
-                callback: function(t) {
-                    return t.popup({
-                        title: priceName,
-                        url: 'settings.html',
-                        height: 192
-                    });
-                }
-            }
-        },
-        'card-badges': function(t) {
-            return getBadge(t);
-        },
-        'card-detail-badges': function(t) {
-            return getBadge(t);
-        },
-        'list-sorters': function(t) {
-            return [{
-                text: t.localizeKey('sortIncrease'),
-                callback: function(t, options) {
-                    return sortCards(t, options, false);
-                }
-            }, {
-                text: t.localizeKey('sortDecrease'),
-                callback: function(t, options) {
-                    return sortCards(t, options, true);
-                }
-            }];
-        }
+        'card-buttons':         (t) => cardButtons(t),
+        'card-badges':          (t) => cardBadge(t),
+        'card-detail-badges':   (t) => cardBadge(t),
+        'list-sorters':         (t) => sorters(t),
+        'board-buttons':        (t) => manager(t)
     }, {
         localization: {
             defaultLocale: 'en',
