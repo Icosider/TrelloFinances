@@ -82,7 +82,7 @@ TrelloPowerUp.initialize({
         'list-sorters':         (t) => sorters(t)
     }, {
         localization: {
-            defaultLocale: window.locale,
+            defaultLocale: 'en',
             supportedLocales: ['en', 'fr', 'ru'],
             resourceUrl: 'lang/{locale}.json'
         }
