@@ -2,7 +2,7 @@ const t = TrelloPowerUp.iframe({
     localization: {
         defaultLocale: window.locale,
         supportedLocales: ['en', 'fr', 'ru'],
-        resourceUrl: 'lang/{locale}.json'
+        resourceUrl: '/lang/{locale}.json'
     }
 }),
 currency = {
