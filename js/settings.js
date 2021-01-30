@@ -1,7 +1,6 @@
-const promise = TrelloPowerUp.Promise,
-t = TrelloPowerUp.iframe({
+const t = TrelloPowerUp.iframe({
     localization: {
-        defaultLocale: 'en',
+        defaultLocale: window.locale,
         supportedLocales: ['en', 'fr', 'ru'],
         resourceUrl: 'lang/{locale}.json'
     }
@@ -18,7 +17,7 @@ currency = {
 t.render(() => {
     t.localizeNode(document.body);
 
-    promise.all([
+    TrelloPowerUp.Promise.all([
         t.get('card', 'shared', 'price'),
         t.get('card', 'shared', 'currency')
     ]).spread(function(price, cardCur) {
@@ -28,7 +27,7 @@ t.render(() => {
         if (!isNaN(iPrice))
             document.getElementById('price').value = iPrice;
 
-        for (cur in currency) {
+        for (let cur in currency) {
             const currencyElement = document.createElement('option');
             currencyElement.innerHTML = t.localizeKey('currency_' + cur.toString().toLowerCase());
             currencyElement.value = cur.toString();
@@ -40,7 +39,7 @@ t.render(() => {
     });
 });
 
-document.getElementById('save').addEventListener('click', (e) => {
+document.getElementById('save').addEventListener('click', () => {
     const price = document.getElementById('price').value;
     const cur = document.getElementById('currency').value;
 

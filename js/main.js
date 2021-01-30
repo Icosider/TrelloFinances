@@ -12,7 +12,7 @@ function cardButtons(t) {
             height: 192
         })
     };
-};
+}
 
 function cardBadge(t) {
     return PROMISE.all([
@@ -20,16 +20,19 @@ function cardBadge(t) {
         t.get('card', 'shared', 'paid', false),
         t.get('card', 'shared', 'currency')
     ]).spread((price, paid, currency) => {
-        if (isNaN(price) || price == 0)
+        if (isNaN(price) || price === 0)
             return null;
         return {
             title: t.localizeKey('price'),
-            text: paid ? t.localizeKey('paid') : price.toLocaleString(window.locale, { style: 'currency', currency: currency }),
+            text: paid ? t.localizeKey('paid') : price.toLocaleString(window.locale, {
+                style: 'currency',
+                currency: currency
+            }),
             color: paid ? 'green' : 'red',
             callback: (t) => t.set('card', 'shared', 'paid', !paid)
         };
     })
-};
+}
 
 function sorters(t) {
     return [{
@@ -39,7 +42,7 @@ function sorters(t) {
         text: t.localizeKey('sortDecrease'),
         callback: (t, options) => sortCards(t, options, true)
     }];
-};
+}
 
 function sortCards(t, options, reverse) {
     return new Promise((resolve) => {
@@ -67,7 +70,7 @@ function sortCards(t, options, reverse) {
             sortedCardsId = sortedCardsId.reverse();
         return { sortedIds: sortedCardsId };
     });
-};
+}
 
 /**
  *   Initialization of capabilities
@@ -79,7 +82,7 @@ TrelloPowerUp.initialize({
         'list-sorters':         (t) => sorters(t)
     }, {
         localization: {
-            defaultLocale: 'en',
+            defaultLocale: window.locale,
             supportedLocales: ['en', 'fr', 'ru'],
             resourceUrl: 'lang/{locale}.json'
         }
