@@ -1,6 +1,6 @@
 const t = TrelloPowerUp.iframe({
     localization: {
-        defaultLocale: window.locale,
+        defaultLocale: 'en',
         supportedLocales: ['en', 'fr', 'ru'],
         resourceUrl: '/lang/{locale}.json'
     }
