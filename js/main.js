@@ -31,21 +31,6 @@ function cardBadge(t) {
     })
 };
 
-function manager(t) {
-    const managerName = t.localizeKey('manager');
-    return {
-        text: managerName,
-        icon: ICON_PRICE,
-        callback: (t) => t.modal({
-            title: managerName,
-            url: './manager.html',
-            accentColor: '#F2D600',
-            fullscreen: true,
-            callback: () => console.log('Goodbye.'),
-        })
-    };
-};
-
 function sorters(t) {
     return [{
         text: t.localizeKey('sortIncrease'),
@@ -91,8 +76,7 @@ TrelloPowerUp.initialize({
         'card-buttons':         (t) => cardButtons(t),
         'card-badges':          (t) => cardBadge(t),
         'card-detail-badges':   (t) => cardBadge(t),
-        'list-sorters':         (t) => sorters(t),
-        'board-buttons':        (t) => manager(t)
+        'list-sorters':         (t) => sorters(t)
     }, {
         localization: {
             defaultLocale: 'en',
