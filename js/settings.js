@@ -39,7 +39,7 @@ t.render(() => {
     });
 });
 
-document.getElementById('save').addEventListener('click', (e) => {
+document.getElementById('save').addEventListener('click', () => {
     const price = document.getElementById('price').value;
     const cur = document.getElementById('currency').value;
 
